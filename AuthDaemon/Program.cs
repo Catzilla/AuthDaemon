@@ -25,61 +25,8 @@ namespace AuthDaemon
         public static IniData Config;
         public static AuthServer<AuthSession> AuthServer;
 
-        static void Test2()
-        {
-
-            var login = "freepvps";
-            var password = "qwerty";
-            var hashs = "ubOwiUSg/BgLm8zrL/7ffA==";
-
-
-            var bytes = Convert.FromBase64String(hashs);
-            var md5 = System.Security.Cryptography.MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(login + password));
-
-            Console.WriteLine(BitConverter.ToString(bytes));
-            Console.WriteLine(BitConverter.ToString(md5));
-        }
-        static void Test()
-        {
-            MySqlConnectionStringBuilder mysqlCSB;
-            mysqlCSB = new MySqlConnectionStringBuilder();
-            mysqlCSB.Server = "localhost";
-            mysqlCSB.Port = 3306;
-            mysqlCSB.Database = "pw";
-            mysqlCSB["uid"] = "root";
-            mysqlCSB.Password = "aliceabcqwertyalpha";
-            Log.Info("ConnectionString = {0}", mysqlCSB.ConnectionString);
-        }
-        static void Test3()
-        {
-            var serializer = new DynamicSerializer();
-
-            var pair = new StructureDeclaration();
-            pair.Fields.Add(new KeyValuePair<string, string>("name", "byte[]"));
-            pair.Fields.Add(new KeyValuePair<string, string>("id", "int"));
-            serializer.KnownFields["pair"] = pair;
-
-
-            var structure = new StructureDeclaration();
-            structure.Fields.Add(new KeyValuePair<string, string>("global", "uint"));
-            structure.Fields.Add(new KeyValuePair<string, string>("pairs", "pair"));
-
-            dynamic d = new DynamicStructure();
-            d.name = new byte[] { 1, 2, 3 };
-            d.id = 20;
-
-            dynamic dd = new DynamicStructure();
-            dd.global = 1;
-            //dd.pairs = d;
-
-            var ds = new DataStream();
-            structure.Serialize(serializer, ds, dd);
-
-            Log.Info(BitConverter.ToString(ds.GetBytes()));
-        }
         static void Main(string[] args)
         {
-            Test3();
             if (args.Length == 0)
             {
                 args = new []{ "auth.conf" };
