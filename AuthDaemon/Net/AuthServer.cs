@@ -30,7 +30,7 @@ namespace AuthDaemon.Net
 
         public object State { get; set; }
         
-        public virtual void Start(IPEndPoint endPoint)
+        public virtual void Start(IPEndPoint endPoint, int backlog = 100)
         {
             lock (startLock)
             {
@@ -41,7 +41,7 @@ namespace AuthDaemon.Net
                 LocalEndPoint = endPoint;
                 BaseSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 BaseSocket.Bind(endPoint);
-                BaseSocket.Listen(100);
+                BaseSocket.Listen(backlog);
 
                 Started = true;
                 BeginAccept(BaseSocket);
@@ -141,6 +141,8 @@ namespace AuthDaemon.Net
             session.PacketsRegistry = new PacketsRegistry();
             session.Plugins = new PluginManager(session);
             session.Handler = new PacketsHandler();
+            session.SendHandler = new PacketsHandler();
+            session.SendCompleteHandler = new PacketsHandler();
             session.State = State;
 
             SessionPreAccepted(this, session);

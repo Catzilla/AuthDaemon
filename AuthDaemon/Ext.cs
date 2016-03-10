@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace AuthDaemon
 {
@@ -18,14 +19,33 @@ namespace AuthDaemon
         public static readonly byte[] EmptyBytes = { };
         public static readonly object[] EmptyObjects = { };
 
+        public static int ToUnixTime(DateTime dt)
+        {
+            return (int)(dt - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
+        }
+        public static DateTime FromUnixTime(int unixTime)
+        {
+            return new DateTime(1970, 1, 1, 0, 0, 0).AddSeconds(unixTime);
+        }
+
         public static string Safe(this string s)
         {
             return s == null ? string.Empty : s;
         }
+        public static string Safe(this string s, string defaultValue)
+        {
+            return string.IsNullOrEmpty(s) ? defaultValue : s;
+        }
         public static T Safe<T>(this object obj)
         {
-            if (obj == null) return default(T);
+            if (obj is T) return (T)obj;
+            if (obj == null || obj is DBNull) return default(T);
             return (T)(dynamic)obj;
+        }
+
+        public static IPAddress GetIp(byte[] bytes)
+        {
+            return new IPAddress(bytes.Reverse().ToArray());
         }
 
         public static List<string> ParseArgs(string s)

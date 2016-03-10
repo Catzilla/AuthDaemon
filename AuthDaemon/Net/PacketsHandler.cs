@@ -14,21 +14,23 @@ namespace AuthDaemon.Net
 {
     public class PacketsHandler
     {
-        protected Dictionary<uint, List<PacketEventHandler>> handlers;
+        protected Dictionary<uint, SortedSet<PacketHandlerContainer>> handlers;
         public PacketsHandler()
         {
-            handlers = new Dictionary<uint, List<PacketEventHandler>>();
+            handlers = new Dictionary<uint, SortedSet<PacketHandlerContainer>>();
         }
-        
-        public virtual void AddHandler(uint packetId, PacketEventHandler handler)
+
+        private int id = 0;
+        public virtual void AddHandler(uint packetId, PacketEventHandler handler, int priority = 0)
         {
-            List<PacketEventHandler> handlersList;
+            SortedSet<PacketHandlerContainer> handlersList;
             if (!handlers.TryGetValue(packetId, out handlersList))
             {
-                handlersList = new List<PacketEventHandler>();
+                handlersList = new SortedSet<PacketHandlerContainer>();
                 handlers.Add(packetId, handlersList);
             }
-            handlersList.Add(handler);
+            var container = new PacketHandlerContainer(handler, priority, ++id);
+            handlersList.Add(container);
         }
         public bool Contains(uint packetId)
         {
@@ -36,13 +38,14 @@ namespace AuthDaemon.Net
         }
         public PacketEventArgs HandlePacket(uint packetId, dynamic gamePacket)
         {
-            List<PacketEventHandler> handlersList;
+            SortedSet<PacketHandlerContainer> handlersList;
             if (handlers.TryGetValue(packetId, out handlersList))
             {
                 var eventArgs = new PacketEventArgs(packetId, gamePacket);
-                foreach (var handler in handlersList)
+                foreach (var handler in handlersList.Reverse())
                 {
-                    handler(this, eventArgs);
+                    handler.Handler(this, eventArgs);
+                    if (eventArgs.Cancel) break;
                 }
                 return eventArgs;
             }

@@ -16,6 +16,7 @@ using IniParser.Model;
 using System.Reflection;
 using System.IO;
 using AuthDaemon.Data;
+using System.Dynamic;
 
 namespace AuthDaemon.Net
 {
@@ -27,6 +28,8 @@ namespace AuthDaemon.Net
         public SocketStateObject ClientState { get; set; }
         public PacketsRegistry PacketsRegistry { get; set; }
         public PacketsHandler Handler { get; set; }
+        public PacketsHandler SendHandler { get; set; }
+        public PacketsHandler SendCompleteHandler { get; set; }
         public PluginManager Plugins { get; set; }
 
         public Database Database { get; set; }
@@ -192,14 +195,28 @@ namespace AuthDaemon.Net
                 }
             }
         }
+        public virtual void Send(uint packetId, int connectionId, object argument, object result)
+        {
+            connectionId = (int)(((uint)connectionId) & 0x7FFFFFFF);
+
+            dynamic d = new DynamicStructure();
+            d.Id = connectionId;
+            d.Res = result;
+            d.Arg = argument;
+            Send(packetId, d);
+        }
         public virtual void Send(uint packetId, object packet)
         {
+            var cancel = SendHandler.HandlePacket(packetId, packet)?.Cancel ?? false;
+            if (cancel) return;
+
             var ds = new DataStream { IsLittleEndian = false };
             var ok = PacketsRegistry.Serialize(packetId, ds, packet);
 
             if (ok)
             {
                 Send(packetId, ds);
+                SendCompleteHandler.HandlePacket(packetId, packet);
             }
             else
             {

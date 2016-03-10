@@ -29,7 +29,7 @@ namespace AuthDaemon
         public static Logger Log = LogManager.GetLogger("main");
         public static IniData Config;
         public static AuthServer<AuthSession> AuthServer;
-        
+
         static void Main(string[] args)
         {
             if (args.Length == 0)
@@ -62,10 +62,15 @@ namespace AuthDaemon
                 Log.Error(ex);
             }
             var port = int.Parse(Config.Sections["GAuthServer"]["port"]);
+            var backLog = 0;
+            if (!int.TryParse(Config.Sections["GAuthServer"]["listen_backlog"].Safe(), out backLog))
+            {
+                backLog = 100;
+            }
 
             AuthServer = new AuthServer<AuthSession>();
             AuthServer.State = Config;
-            AuthServer.Start(new IPEndPoint(IPAddress.Any, port));
+            AuthServer.Start(new IPEndPoint(IPAddress.Any, port), backLog);
 
             Thread.Sleep(Timeout.Infinite);
         }

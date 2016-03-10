@@ -1,0 +1,151 @@
+﻿<queries>
+  <query name="getUserid">
+    <table name="users" alias="u" />
+    <column name="id" column="u.id" />
+    <select name="byName" condition="WHERE u.name = ?" />
+  </query>
+
+  <query name="getUserInfo">
+    <table name="users" alias="u" />
+    <column name="id" column="u.id" />
+    <column name="prompt" column="u.prompt" />
+    <column name="answer" column="u.answer" />
+    <column name="truename" column="u.truename" />
+    <column name="idnumber" column="u.idnumber" />
+    <column name="email" column="u.email" />
+    <column name="mobilenumber" column="u.mobilenumber" />
+    <column name="province" column="u.province" />
+    <column name="city" column="u.city" />
+    <column name="phonenumber" column="u.phonenumber" />
+    <column name="address" column="u.address" />
+    <column name="postalcode" column="u.postalcode" />
+    <column name="gender" column="u.gender" />
+    <column name="birthday" column="u.birthday" />
+    <column name="creatime" column="u.creatime" />
+    <column name="qq" column="u.qq" />
+    <select name="byName" condition="WHERE u.name = ?" />
+  </query>
+
+  <query name="getUsername">
+    <table name="users" alias="u" />
+    <column name="name" column="u.name" />
+    <select name="byId" condition="WHERE u.id = ?"/>
+  </query>
+
+  <query name="acquireIdPasswd">
+    <table name="users" alias="u" />
+    <column name="id" column="u.id" />
+    <column name="passwd" column="u.passwd" />
+    <column name="creatime" column="u.creatime" />
+    <select name="byName" condition="WHERE u.name = ?"/>
+  </query>
+
+  <query name="acquireIdPasswd2">
+    <table name="users" alias="u" />
+    <column name="id" column="u.id" />
+    <column name="passwd2" column="u.passwd2" />
+    <select name="byName" condition="WHERE u.name = ?"/>
+  </query>
+
+  <query name="acquireUserCreatime">
+    <table name="users" alias="u" />
+    <column name="creatime" column="u.creatime" />
+    <select name="byUid" condition="WHERE u.id = ?"/>
+  </query>
+
+  <query name="getIPLimit">
+    <table name="iplimit" alias="i" />
+    <column name="uid" column="i.uid" />
+    <column name="ipaddr1" column="i.ipaddr1" />
+    <column name="ipmask1" column="i.ipmask1" />
+    <column name="ipaddr2" column="i.ipaddr2" />
+    <column name="ipmask2" column="i.ipmask2" />
+    <column name="ipaddr3" column="i.ipaddr3" />
+    <column name="ipmask3" column="i.ipmask3" />
+    <column name="enablue" column="i.enable" />
+    <column name="lockstatus" column="i.lockstatus" />
+    <select name="byUid" condition="WHERE i.uid = ?"/>
+  </query>
+
+  <query name="acquireUserPrivilege">
+    <table name="auth" alias="au" />
+    <column name="rid" column="au.rid" />
+    <select name="byUidZid" condition="WHERE au.userid = ? AND au.zoneid = ?"/>
+  </query>
+
+  <query name="acquirePrivilege">
+    <table name="auth" alias="au" />
+    <table name="users" alias="users" />
+    <column name="userid" column="au.userid" />
+    <column name="zoneid" column="au.zoneid" />
+    <column name="rid" column="au.rid" />
+    <column name="name" column="users.name" />
+    <column name="creatime" column="users.creatime" />
+    <select name="byZid" condition="WHERE au.userid = users.id AND au.zoneid = ?"/>
+    <select name="byUid" condition="WHERE au.userid = users.id AND au.userid = ?"/>
+    <select name="byUidZid" condition="WHERE au.userid = users.id AND au.userid = ? AND au.zoneid = ?"/>
+    <select name="byRidZid" condition="WHERE au.userid = users.id AND au.rid = ? AND au.zoneid = ?"/>
+    <select name="byAll" condition="WHERE au.userid = users.id"/>
+  </query>
+
+  <query name="acquireForbid">
+    <table name="forbid" alias="fb"/>
+    <column name="userid" column="fb.userid"/>
+    <column name="type" column="fb.type"/>
+    <column name="ctime" column="fb.ctime"/>
+    <column name="forbid_time" column="fb.forbid_time"/>
+    <column name="reason" column="fb.reason"/>
+    <column name="gmroleid" column="fb.gmroleid"/>
+    <select name="byUid" condition="WHERE fb.userid = ? and time_to_sec(timediff(Now(),fb.ctime))&lt;=fb.forbid_time"/>
+  </query>
+
+  <query name="getUserOnlineInfo">
+    <table name="point" alias="p"/>
+    <column name="zoneid" column="p.zoneid"/>
+    <column name="localsid" column="p.zonelocalid"/>
+    <column name="aid" column="p.aid"/>
+    <select name="byUid" condition="WHERE p.uid = ?"/>
+  </query>
+
+  <query name="getUserPoints">
+    <table name="point" alias="p" />
+    <column name="aid" column="p.aid" />
+    <column name="time" column="p.time" />
+    <column name="enddate" column="p.enddate" />
+    <select name="byuid" condition="where p.uid=? and NOT p.aid=0" />
+  </query>
+
+  <query name="getusecashnow">
+    <table name="usecashnow" alias="u"/>
+    <column name="userid" column="u.userid"/>
+    <column name="zoneid" column="u.zoneid"/>
+    <column name="sn" column="u.sn"/>
+    <column name="aid" column="u.aid"/>
+    <column name="point" column="u.point"/>
+    <column name="cash" column="u.cash"/>
+    <column name="status" column="u.status"/>
+    <column name="creatime" column="u.creatime"/>
+
+    <select name="bystatus" condition="WHERE status = ? AND creatime &lt; date_add(now(), INTERVAL '-200' SECOND)"/>
+    <select name="byuserzone" condition="WHERE u.userid = ? AND u.zoneid = ?"/>
+    <select name="byuserzonesn" condition="WHERE u.userid = ? AND u.zoneid = ? AND u.sn = ?"/>
+    <select name="byuser" condition="WHERE u.userid = ?"/>
+  </query>
+
+  <query name="getusecashlog">
+    <table name="usecashlog" alias="u"/>
+    <column name="userid" column="u.userid"/>
+    <column name="zoneid" column="u.zoneid"/>
+    <column name="sn" column="u.sn"/>
+    <column name="aid" column="u.aid"/>
+    <column name="point" column="u.point"/>
+    <column name="cash" column="u.cash"/>
+    <column name="status" column="u.status"/>
+    <column name="creatime" column="u.creatime"/>
+    <column name="fintime" column="u.fintime"/>
+
+    <select name="byuserzone" condition="WHERE u.userid = ? AND u.zoneid = ?"/>
+    <select name="byuserzonesn" condition="WHERE u.userid = ? AND u.zoneid = ? AND u.sn = ?"/>
+    <select name="byuser" condition="WHERE u.userid = ?"/>
+  </query>
+</queries>

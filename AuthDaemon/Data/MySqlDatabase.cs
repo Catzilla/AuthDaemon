@@ -18,10 +18,12 @@ namespace AuthDaemon.Data
     public class MySqlDatabase : Database
     {
         public MySqlConnection MySqlConnection { get; private set; }
+        public Dictionary<string, MySqlQuery> Queries { get; private set; }
 
         public MySqlDatabase(string connectionString)
         {
             MySqlConnection = new MySqlConnection(connectionString);
+            Queries = new Dictionary<string, MySqlQuery>();
         }
 
         /*
@@ -32,18 +34,19 @@ namespace AuthDaemon.Data
  <parameter name="passwd1"   sql-type="varchar(64)"  java-type="java.lang.String"  in="false" out="true" />
 </procedure>
         */
-        public override void AcquireUserPassword(string name, out int uid, out string password)
+        public override bool AcquireUserPassword(string name, out int uid, out string password)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("name",      MySqlDbType.VarChar, 64) { Value = name },
-                new MySqlParameter("uid",       MySqlDbType.Int32) { Direction = ParameterDirection.Output },
-                new MySqlParameter("passwd",    MySqlDbType.VarChar, 64) { Direction = ParameterDirection.Output }
+                new MySqlParameter("name1",      MySqlDbType.VarChar, 64) { Value = name },
+                new MySqlParameter("uid1",       MySqlDbType.Int32) { Direction = ParameterDirection.Output },
+                new MySqlParameter("passwd1",    MySqlDbType.VarChar, 64) { Direction = ParameterDirection.Output }
             };
-            CallFunction("acquireuserpasswd", args);
+            var result = CallFunction("acquireuserpasswd", args);
 
             uid = (int)args[1].Value;
             password = (string)args[2].Value;
+            return result;
         }
         /*
 
@@ -56,63 +59,66 @@ namespace AuthDaemon.Data
     <parameter name="gmroleid" sql-type="integer"     java-type="java.lang.Integer" in="true" out="false"/>
 </procedure>
         */
-        public override void AddForbid(int userId, int type, int forbidTime, byte[] reason, int gmRoleId)
+        public override bool AddForbid(int userId, int type, int forbidTime, byte[] reason, int gmRoleId)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("usedid",        MySqlDbType.Int32) { Value = userId },
-                new MySqlParameter("type",          MySqlDbType.Int32) { Value = userId },
-                new MySqlParameter("forbid_time",   MySqlDbType.Int32) { Value = userId },
-                new MySqlParameter("reason",        MySqlDbType.VarBinary, 255) { Value = reason },
-                new MySqlParameter("gmroleid",      MySqlDbType.Int32) { Value = userId }
+                new MySqlParameter("usedid1",        MySqlDbType.Int32) { Value = userId },
+                new MySqlParameter("type1",          MySqlDbType.Int32) { Value = userId },
+                new MySqlParameter("forbid_time1",   MySqlDbType.Int32) { Value = userId },
+                new MySqlParameter("reason1",        MySqlDbType.VarBinary, 255) { Value = reason },
+                new MySqlParameter("gmroleid1",      MySqlDbType.Int32) { Value = userId }
             };
-            CallFunction("addForbid", args);
+            var result = CallFunction("addForbid", args);
+            return result;
         }
-        public override void AddUser(string name, byte[] password, string prompt, string answer, string trueName, string idNumber, string email, string mobileNumber, string province, string city, string phoneNumber, string address, string postalCode, int gender, string birthday, string qq, byte[] password2)
+        public override bool AddUser(string name, byte[] password, string prompt, string answer, string trueName, string idNumber, string email, string mobileNumber, string province, string city, string phoneNumber, string address, string postalCode, int gender, string birthday, string qq, byte[] password2)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("name",          MySqlDbType.VarChar, 64) { Value = name },
-                new MySqlParameter("passwd",        MySqlDbType.Binary, 16) { Value = password },
-                new MySqlParameter("prompt",        MySqlDbType.VarChar, 32) { Value = prompt },
-                new MySqlParameter("answer",        MySqlDbType.VarChar, 32) { Value = answer },
-                new MySqlParameter("truename",      MySqlDbType.VarChar, 32) { Value = trueName },
-                new MySqlParameter("idnumber",      MySqlDbType.VarChar, 32) { Value = idNumber },
-                new MySqlParameter("email",         MySqlDbType.VarChar, 64) { Value = email },
-                new MySqlParameter("mobilenumber",  MySqlDbType.VarChar, 32) { Value = mobileNumber },
-                new MySqlParameter("province",      MySqlDbType.VarChar, 32) { Value = province },
-                new MySqlParameter("city",          MySqlDbType.VarChar, 32) { Value = city },
-                new MySqlParameter("phonenumber",   MySqlDbType.VarChar, 32) { Value = phoneNumber },
-                new MySqlParameter("address",       MySqlDbType.VarChar, 64) { Value = address },
-                new MySqlParameter("postalcode",    MySqlDbType.VarChar, 8) { Value = postalCode },
-                new MySqlParameter("gender",        MySqlDbType.Int32) { Value = gender },
-                new MySqlParameter("birthday",      MySqlDbType.VarChar, 32) { Value = birthday },
-                new MySqlParameter("qq",            MySqlDbType.VarChar, 32) { Value = qq },
-                new MySqlParameter("passwd2",       MySqlDbType.Binary, 16) { Value = password2 },
+                new MySqlParameter("name1",          MySqlDbType.VarChar, 64) { Value = name },
+                new MySqlParameter("passwd1",        MySqlDbType.Binary, 16) { Value = password },
+                new MySqlParameter("prompt1",        MySqlDbType.VarChar, 32) { Value = prompt },
+                new MySqlParameter("answer1",        MySqlDbType.VarChar, 32) { Value = answer },
+                new MySqlParameter("truename1",      MySqlDbType.VarChar, 32) { Value = trueName },
+                new MySqlParameter("idnumber1",      MySqlDbType.VarChar, 32) { Value = idNumber },
+                new MySqlParameter("email1",         MySqlDbType.VarChar, 64) { Value = email },
+                new MySqlParameter("mobilenumber1",  MySqlDbType.VarChar, 32) { Value = mobileNumber },
+                new MySqlParameter("province1",      MySqlDbType.VarChar, 32) { Value = province },
+                new MySqlParameter("city1",          MySqlDbType.VarChar, 32) { Value = city },
+                new MySqlParameter("phonenumber1",   MySqlDbType.VarChar, 32) { Value = phoneNumber },
+                new MySqlParameter("address1",       MySqlDbType.VarChar, 64) { Value = address },
+                new MySqlParameter("postalcode1",    MySqlDbType.VarChar, 8) { Value = postalCode },
+                new MySqlParameter("gender1",        MySqlDbType.Int32) { Value = gender },
+                new MySqlParameter("birthday1",      MySqlDbType.VarChar, 32) { Value = birthday },
+                new MySqlParameter("qq1",            MySqlDbType.VarChar, 32) { Value = qq },
+                new MySqlParameter("passwd21",       MySqlDbType.Binary, 16) { Value = password2 },
             };                      
-            CallFunction("adduser", args);
+            var result = CallFunction("adduser", args);
+            return result;
         }
-        public override void UpdateUserInfo(string name, string prompt, string answer, string trueName, string idNumber, string email, string mobileNumber, string province, string city, string phoneNumber, string address, string postalCode, int gender, string birthday, string qq)
+        public override bool UpdateUserInfo(string name, string prompt, string answer, string trueName, string idNumber, string email, string mobileNumber, string province, string city, string phoneNumber, string address, string postalCode, int gender, string birthday, string qq)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("name",          MySqlDbType.VarChar, 64) { Value = name },
-                new MySqlParameter("prompt",        MySqlDbType.VarChar, 32) { Value = prompt },
-                new MySqlParameter("answer",        MySqlDbType.VarChar, 32) { Value = answer },
-                new MySqlParameter("truename",      MySqlDbType.VarChar, 32) { Value = trueName },
-                new MySqlParameter("idnumber",      MySqlDbType.VarChar, 32) { Value = idNumber },
-                new MySqlParameter("email",         MySqlDbType.VarChar, 64) { Value = email },
-                new MySqlParameter("mobilenumber",  MySqlDbType.VarChar, 32) { Value = mobileNumber },
-                new MySqlParameter("province",      MySqlDbType.VarChar, 32) { Value = province },
-                new MySqlParameter("city",          MySqlDbType.VarChar, 32) { Value = city },
-                new MySqlParameter("phonenumber",   MySqlDbType.VarChar, 32) { Value = phoneNumber },
-                new MySqlParameter("address",       MySqlDbType.VarChar, 64) { Value = address },
-                new MySqlParameter("postalcode",    MySqlDbType.VarChar, 8) { Value = postalCode },
-                new MySqlParameter("gender",        MySqlDbType.Int32) { Value = gender },
-                new MySqlParameter("birthday",      MySqlDbType.VarChar, 32) { Value = birthday },
-                new MySqlParameter("qq",            MySqlDbType.VarChar, 32) { Value = qq },
+                new MySqlParameter("name1",          MySqlDbType.VarChar, 64) { Value = name },
+                new MySqlParameter("prompt1",        MySqlDbType.VarChar, 32) { Value = prompt },
+                new MySqlParameter("answer1",        MySqlDbType.VarChar, 32) { Value = answer },
+                new MySqlParameter("truename1",      MySqlDbType.VarChar, 32) { Value = trueName },
+                new MySqlParameter("idnumber1",      MySqlDbType.VarChar, 32) { Value = idNumber },
+                new MySqlParameter("email1",         MySqlDbType.VarChar, 64) { Value = email },
+                new MySqlParameter("mobilenumber1",  MySqlDbType.VarChar, 32) { Value = mobileNumber },
+                new MySqlParameter("province1",      MySqlDbType.VarChar, 32) { Value = province },
+                new MySqlParameter("city1",          MySqlDbType.VarChar, 32) { Value = city },
+                new MySqlParameter("phonenumber1",   MySqlDbType.VarChar, 32) { Value = phoneNumber },
+                new MySqlParameter("address1",       MySqlDbType.VarChar, 64) { Value = address },
+                new MySqlParameter("postalcode1",    MySqlDbType.VarChar, 8) { Value = postalCode },
+                new MySqlParameter("gender1",        MySqlDbType.Int32) { Value = gender },
+                new MySqlParameter("birthday1",      MySqlDbType.VarChar, 32) { Value = birthday },
+                new MySqlParameter("qq1",            MySqlDbType.VarChar, 32) { Value = qq },
             };
-            CallFunction("updateUserInfo", args);
+            var result = CallFunction("updateUserInfo", args);
+            return result;
         }
         /*
 
@@ -121,14 +127,15 @@ namespace AuthDaemon.Data
             <parameter name="passwd" sql-type="binary(16)" java-type="java.lang.reflect.Array" in="true" out="false" />
         </procedure>
         */
-        public override void ChangePassword(string name, byte[] password)
+        public override bool ChangePassword(string name, byte[] password)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("name",          MySqlDbType.VarChar, 64) { Value = name },
-                new MySqlParameter("passwd",        MySqlDbType.Binary, 16) { Value = password },
+                new MySqlParameter("name1",          MySqlDbType.VarChar, 64) { Value = name },
+                new MySqlParameter("passwd1",        MySqlDbType.Binary, 16) { Value = password },
             };
-            CallFunction("changePasswd", args);
+            var result = CallFunction("changePasswd", args);
+            return result;
         }
         /*
     <procedure name="changePasswd2" connection="auth0" operate="replaceA">
@@ -136,14 +143,15 @@ namespace AuthDaemon.Data
         <parameter name="passwd2" sql-type="binary(16)" java-type="java.lang.reflect.Array" in="true" out="false" />
     </procedure>
         */
-        public override void ChangePassword2(string name, byte[] password2)
+        public override bool ChangePassword2(string name, byte[] password2)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("name",          MySqlDbType.VarChar, 64) { Value = name },
-                new MySqlParameter("passwd2",        MySqlDbType.Binary, 16) { Value = password2 },
+                new MySqlParameter("name1",           MySqlDbType.VarChar, 64) { Value = name },
+                new MySqlParameter("passwd21",        MySqlDbType.Binary, 16) { Value = password2 },
             };
-            CallFunction("changePasswd2", args);
+            var result = CallFunction("changePasswd2", args);
+            return result;
         }
         /*
 <procedure name="setiplimit" connection="auth0" operate="replaceA">
@@ -156,19 +164,20 @@ namespace AuthDaemon.Data
     <parameter name="ipmask3"  sql-type="varchar(2)"  java-type="java.lang.String" in="true" out="false"/>
 </procedure>
         */
-        public override void SetIpLimit(int uid, int ipaddr1, string ipmask1, int ipaddr2, string ipmask2, int ipaddr3, string ipmask3, bool enable)
+        public override bool SetIpLimit(int uid, int ipaddr1, string ipmask1, int ipaddr2, string ipmask2, int ipaddr3, string ipmask3, bool enable)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("uid",            MySqlDbType.Int32) { Value = uid },
-                new MySqlParameter("ipaddr1",        MySqlDbType.Int32) { Value = ipaddr1 },
-                new MySqlParameter("ipmask1",        MySqlDbType.VarChar, 2) { Value = ipmask1 },
-                new MySqlParameter("ipaddr2",        MySqlDbType.Int32) { Value = ipaddr2 },
-                new MySqlParameter("ipmask2",        MySqlDbType.VarChar, 2) { Value = ipmask2 },
-                new MySqlParameter("ipaddr3",        MySqlDbType.Int32) { Value = ipaddr3 },
-                new MySqlParameter("ipmask3",        MySqlDbType.VarChar, 2) { Value = ipmask3 },
+                new MySqlParameter("uid1",            MySqlDbType.Int32) { Value = uid },
+                new MySqlParameter("ipaddr11",        MySqlDbType.Int32) { Value = ipaddr1 },
+                new MySqlParameter("ipmask11",        MySqlDbType.VarChar, 2) { Value = ipmask1 },
+                new MySqlParameter("ipaddr21",        MySqlDbType.Int32) { Value = ipaddr2 },
+                new MySqlParameter("ipmask21",        MySqlDbType.VarChar, 2) { Value = ipmask2 },
+                new MySqlParameter("ipaddr31",        MySqlDbType.Int32) { Value = ipaddr3 },
+                new MySqlParameter("ipmask31",        MySqlDbType.VarChar, 2) { Value = ipmask3 },
             };
-            CallFunction("setiplimit", args);
+            var result = CallFunction("setiplimit", args);
+            return result;
         }
         /*
 <procedure name="enableiplimit" connection="auth0" operate="replaceA">
@@ -176,14 +185,15 @@ namespace AuthDaemon.Data
     <parameter name="enable"   sql-type="char(1)"     java-type="java.lang.String" in="true" out="false"/>
 </procedure>
         */
-        public override void EnableIpLimit(int uid, bool status)
+        public override bool EnableIpLimit(int uid, bool status)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("uid",            MySqlDbType.Int32) { Value = uid },
-                new MySqlParameter("enable",         MySqlDbType.Byte) { Value = (byte)(status ? 1 : 0)},
+                new MySqlParameter("uid1",            MySqlDbType.Int32) { Value = uid },
+                new MySqlParameter("enable1",         MySqlDbType.Byte) { Value = (byte)(status ? 1 : 0)},
             };
-            CallFunction("setiplimit", args);
+            var result = CallFunction("setiplimit", args);
+            return result;
         }
         /*
 <procedure name="lockuser" connection="auth0" operate="replaceA">
@@ -191,14 +201,15 @@ namespace AuthDaemon.Data
     <parameter name="lockstatus"   sql-type="char(1)"     java-type="java.lang.String" in="true" out="false"/>
 </procedure>
         */
-        public override void LockUser(int uid, bool lockStatus)
+        public override bool LockUser(int uid, bool lockStatus)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("uid",            MySqlDbType.Int32) { Value = uid },
-                new MySqlParameter("lockstatus",     MySqlDbType.Byte) { Value = (byte)(lockStatus ? 1 : 0)},
+                new MySqlParameter("uid1",            MySqlDbType.Int32) { Value = uid },
+                new MySqlParameter("lockstatus1",     MySqlDbType.Byte) { Value = (byte)(lockStatus ? 1 : 0)},
             };
-            CallFunction("lockuser", args);
+            var result = CallFunction("lockuser", args);
+            return result;
         }
         /*
 
@@ -208,15 +219,16 @@ namespace AuthDaemon.Data
     <parameter name="rid"      sql-type="integer"  java-type="java.lang.Integer"   in="true" out="false" />
 </procedure>
         */
-        public override void AddUserPrivilege(int userId, int zoneId, int rid)
+        public override bool AddUserPrivilege(int userId, int zoneId, int rid)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("userid",            MySqlDbType.Int32) { Value = userId },
-                new MySqlParameter("zoneid",            MySqlDbType.Int32) { Value = zoneId },
-                new MySqlParameter("rid",               MySqlDbType.Int32) { Value = rid },
+                new MySqlParameter("userid1",            MySqlDbType.Int32) { Value = userId },
+                new MySqlParameter("zoneid1",            MySqlDbType.Int32) { Value = zoneId },
+                new MySqlParameter("rid1",               MySqlDbType.Int32) { Value = rid },
             };
-            CallFunction("addUserPriv", args);
+            var result = CallFunction("addUserPriv", args);
+            return result;
         }
         /*
 <procedure name="delUserPriv" connection="auth0" operate="replaceA">
@@ -226,29 +238,31 @@ namespace AuthDaemon.Data
     <parameter name="deltype"  sql-type="integer"  java-type="java.lang.Integer"   in="true" out="false" />
 </procedure>
         */
-        public override void DeleteUserPrivilege(int userId, int zoneId, int rid, int deleteType)
+        public override bool DeleteUserPrivilege(int userId, int zoneId, int rid, int deleteType)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("userid",            MySqlDbType.Int32) { Value = userId },
-                new MySqlParameter("zoneid",            MySqlDbType.Int32) { Value = zoneId },
-                new MySqlParameter("rid",               MySqlDbType.Int32) { Value = rid },
-                new MySqlParameter("deltype",           MySqlDbType.Int32) { Value = deleteType },
+                new MySqlParameter("userid1",            MySqlDbType.Int32) { Value = userId },
+                new MySqlParameter("zoneid1",            MySqlDbType.Int32) { Value = zoneId },
+                new MySqlParameter("rid1",               MySqlDbType.Int32) { Value = rid },
+                new MySqlParameter("deltype1",           MySqlDbType.Int32) { Value = deleteType },
             };
-            CallFunction("delUserPriv", args);
+            var result = CallFunction("delUserPriv", args);
+            return result;
         }
         /*
 <procedure name="deleteTimeoutForbid" connection="auth0" operate="replaceA">
     <parameter name="userid"	sql-type="integer" java-type="java.lang.Integer" in="true" out="false"/>
 </procedure>
         */
-        public override void DeleteTimeoutForbid(int userId)
+        public override bool DeleteTimeoutForbid(int userId)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("userid",            MySqlDbType.Int32) { Value = userId },
+                new MySqlParameter("userid1",            MySqlDbType.Int32) { Value = userId },
             };
-            CallFunction("deleteTimeoutForbid", args);
+            var result = CallFunction("deleteTimeoutForbid", args);
+            return result;
         }
         /*
 
@@ -257,14 +271,15 @@ namespace AuthDaemon.Data
     <parameter name="aid"      sql-type="integer"  java-type="java.lang.Integer"     in="true"  out="false" />
 </procedure>
         */
-        public override void ClearOnlineRecords(int zoneId, int aid)
+        public override bool ClearOnlineRecords(int zoneId, int aid)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("zoneid",            MySqlDbType.Int32) { Value = zoneId },
-                new MySqlParameter("aid",               MySqlDbType.Int32) { Value = aid }
+                new MySqlParameter("zoneid1",            MySqlDbType.Int32) { Value = zoneId },
+                new MySqlParameter("aid1",               MySqlDbType.Int32) { Value = aid }
             };
-            CallFunction("clearonlinerecords", args);
+            var result = CallFunction("clearonlinerecords", args);
+            return result;
         }
         /*
 
@@ -276,21 +291,22 @@ namespace AuthDaemon.Data
     <parameter name="overwrite" sql-type="integer"  java-type="java.lang.Integer"    in="true"  out="true"  />
 </procedure>
         */
-        public override void RecordOnline(int uid, int aid, ref int zoneId, ref int zoneLocalId, ref int overwrite)
+        public override bool RecordOnline(int uid, int aid, ref int zoneId, ref int zoneLocalId, ref int overwrite)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("uid",               MySqlDbType.Int32) { Value = uid },
-                new MySqlParameter("aid",               MySqlDbType.Int32) { Value = aid },
-                new MySqlParameter("zoneid",            MySqlDbType.Int32) { Value = zoneId, Direction = ParameterDirection.InputOutput },
-                new MySqlParameter("zonelocalid",       MySqlDbType.Int32) { Value = zoneLocalId, Direction = ParameterDirection.InputOutput },
+                new MySqlParameter("uid1",               MySqlDbType.Int32) { Value = uid },
+                new MySqlParameter("aid1",               MySqlDbType.Int32) { Value = aid },
+                new MySqlParameter("zoneid1",            MySqlDbType.Int32) { Value = zoneId, Direction = ParameterDirection.InputOutput },
+                new MySqlParameter("zonelocalid1",       MySqlDbType.Int32) { Value = zoneLocalId, Direction = ParameterDirection.InputOutput },
                 new MySqlParameter("overwrite",         MySqlDbType.Int32) { Value = overwrite, Direction = ParameterDirection.InputOutput },
             };
-            CallFunction("recordonline", args);
+            var result = CallFunction("recordonline", args);
 
             zoneId = (int)args[2].Value;
             zoneLocalId = (int)args[3].Value;
             overwrite = (int)args[4].Value;
+            return result;
         }
         /*
 <procedure name="recordoffline" connection="auth0" operate="replaceA">
@@ -301,21 +317,22 @@ namespace AuthDaemon.Data
     <parameter name="overwrite" sql-type="integer"  java-type="java.lang.Integer"    in="true"  out="true" />
 </procedure>
         */
-        public override void RecordOffline(int uid, int aid, ref int zoneId, ref int zoneLocalId, ref int overwrite)
+        public override bool RecordOffline(int uid, int aid, ref int zoneId, ref int zoneLocalId, ref int overwrite)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("uid",               MySqlDbType.Int32) { Value = uid },
-                new MySqlParameter("aid",               MySqlDbType.Int32) { Value = aid },
-                new MySqlParameter("zoneid",            MySqlDbType.Int32) { Value = zoneId, Direction = ParameterDirection.InputOutput },
-                new MySqlParameter("zonelocalid",       MySqlDbType.Int32) { Value = zoneLocalId, Direction = ParameterDirection.InputOutput },
-                new MySqlParameter("overwrite",         MySqlDbType.Int32) { Value = overwrite, Direction = ParameterDirection.InputOutput },
+                new MySqlParameter("uid1",               MySqlDbType.Int32) { Value = uid },
+                new MySqlParameter("aid1",               MySqlDbType.Int32) { Value = aid },
+                new MySqlParameter("zoneid1",            MySqlDbType.Int32) { Value = zoneId, Direction = ParameterDirection.InputOutput },
+                new MySqlParameter("zonelocalid1",       MySqlDbType.Int32) { Value = zoneLocalId, Direction = ParameterDirection.InputOutput },
+                new MySqlParameter("overwrite1",         MySqlDbType.Int32) { Value = overwrite, Direction = ParameterDirection.InputOutput },
             };
-            CallFunction("recordoffline", args);
+            var result = CallFunction("recordoffline", args);
 
-            zoneId = (int)args[2].Value;
-            zoneLocalId = (int)args[3].Value;
-            overwrite = (int)args[4].Value;
+            zoneId = args[2].Value.Safe<int>();
+            zoneLocalId = args[3].Value.Safe<int>();
+            overwrite = args[4].Value.Safe<int>();
+            return result;
         }
         /*
 <procedure name="remaintime" connection="auth0" operate="replaceA">
@@ -325,19 +342,20 @@ namespace AuthDaemon.Data
     <parameter name="freetimeleft" sql-type="integer" java-type="java.lang.Integer" in="false" out="true" />
 </procedure>
         */
-        public override void RemainTime(int uid, int aid, out int remain, out int freeTimeLeft)
+        public override bool RemainTime(int uid, int aid, out int remain, out int freeTimeLeft)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("uid",               MySqlDbType.Int32) { Value = uid },
-                new MySqlParameter("aid",               MySqlDbType.Int32) { Value = aid },
-                new MySqlParameter("remain",            MySqlDbType.Int32) { Direction = ParameterDirection.Output },
-                new MySqlParameter("freetimeleft",      MySqlDbType.Int32) { Direction = ParameterDirection.Output },
+                new MySqlParameter("uid1",               MySqlDbType.Int32) { Value = uid },
+                new MySqlParameter("aid1",               MySqlDbType.Int32) { Value = aid },
+                new MySqlParameter("remain1",            MySqlDbType.Int32) { Direction = ParameterDirection.Output },
+                new MySqlParameter("freetimeleft1",      MySqlDbType.Int32) { Direction = ParameterDirection.Output },
             };
-            CallFunction("remaintime", args);
+            var result = CallFunction("remaintime", args);
 
             remain = (int)args[1].Value;
             freeTimeLeft = (int)args[2].Value;
+            return result;
         }
         /*
 <procedure name="adduserpoint" connection="auth0" operate="replaceA">
@@ -346,15 +364,16 @@ namespace AuthDaemon.Data
     <parameter name="time"     sql-type="integer"  java-type="java.lang.Integer"    in="true"  out="false" />
 </procedure>
         */
-        public override void AddUserPoint(int uid, int aid, int time)
+        public override bool AddUserPoint(int uid, int aid, int time)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("uid",               MySqlDbType.Int32) { Value = uid },
-                new MySqlParameter("aid",               MySqlDbType.Int32) { Value = aid },
-                new MySqlParameter("time",              MySqlDbType.Int32) { Value = time },
+                new MySqlParameter("uid1",               MySqlDbType.Int32) { Value = uid },
+                new MySqlParameter("aid1",               MySqlDbType.Int32) { Value = aid },
+                new MySqlParameter("time1",              MySqlDbType.Int32) { Value = time },
             };
-            CallFunction("adduserpoint", args);
+            var result = CallFunction("adduserpoint", args);
+            return result;
         }
         /*
 
@@ -369,38 +388,81 @@ namespace AuthDaemon.Data
     <parameter name="error"  sql-type="integer" java-type="java.lang.Integer" in="false" out="true"/>
 </procedure>
         */
-        public override void UseCash(int userId, int zoneId, int sn, int aid, int point, int cash, int status, out int error)
+        public override bool UseCash(int userId, int zoneId, int sn, int aid, int point, int cash, int status, out int error)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("userid",                MySqlDbType.Int32) { Value = userId },
-                new MySqlParameter("zoneid",                MySqlDbType.Int32) { Value = zoneId },
-                new MySqlParameter("sn",                    MySqlDbType.Int32) { Value = sn },
-                new MySqlParameter("aid",                   MySqlDbType.Int32) { Value = aid },
-                new MySqlParameter("point",                 MySqlDbType.Int32) { Value = point },
-                new MySqlParameter("cash",                  MySqlDbType.Int32) { Value = cash },
-                new MySqlParameter("status",                MySqlDbType.Int32) { Value = status },
-                new MySqlParameter("error",                 MySqlDbType.Int32) { Direction = ParameterDirection.Output },
+                new MySqlParameter("userid1",                MySqlDbType.Int32) { Value = userId },
+                new MySqlParameter("zoneid1",                MySqlDbType.Int32) { Value = zoneId },
+                new MySqlParameter("sn1",                    MySqlDbType.Int32) { Value = sn },
+                new MySqlParameter("aid1",                   MySqlDbType.Int32) { Value = aid },
+                new MySqlParameter("point1",                 MySqlDbType.Int32) { Value = point },
+                new MySqlParameter("cash1",                  MySqlDbType.Int32) { Value = cash },
+                new MySqlParameter("status1",                MySqlDbType.Int32) { Value = status },
+                new MySqlParameter("error1",                 MySqlDbType.Int32) { Direction = ParameterDirection.Output },
             };
-            CallFunction("usecash", args);
+            var result = CallFunction("usecash", args);
 
             error = (int)args[7].Value;
+            return result;
         }
-        public override void AddGM(int userId, int zoneId)
+        public override bool AddGM(int userId, int zoneId)
         {
             var args = new MySqlParameter[]
             {
-                new MySqlParameter("userid",                MySqlDbType.Int32) { Value = userId },
-                new MySqlParameter("zoneid",                MySqlDbType.Int32) { Value = zoneId },
+                new MySqlParameter("userid1",                MySqlDbType.Int32) { Value = userId },
+                new MySqlParameter("zoneid1",                MySqlDbType.Int32) { Value = zoneId },
             };
-            CallFunction("addGM", args);
+            var result = CallFunction("addGM", args);
+            return result;
         }
-        public void CallFunction(string functionName, params MySqlParameter[] parameters)
+
+        public override IEnumerable<dynamic> Query(string name, params object[] args)
         {
-            foreach(var param in parameters)
+            if (MySqlConnection.State != ConnectionState.Open)
             {
-                param.ParameterName += "1";
+                Connect();
             }
+            var index = name.IndexOf('.');
+            var baseName = name;
+            if (index != -1)
+            {
+                baseName = name.Substring(0, index);
+            }
+
+            var query = Queries[baseName];
+            using (var command = new MySqlCommand(query.Select(name), MySqlConnection))
+            {
+                command.CommandType = CommandType.Text;
+
+                for (var i = 0; i < args.Length; i++)
+                {
+                    command.Parameters.Add(new MySqlParameter("argument" + i, args[i]));
+                }
+
+                using (var reader = command.ExecuteReader())
+                {
+
+                    var schema = reader.GetSchemaTable();
+                    var rows = new List<string>();
+                    foreach (DataRow row in schema.Rows)
+                    {
+                        rows.Add(row.Field<string>("ColumnName"));
+                    }
+                    while (reader.Read())
+                    {
+                        var obj = new DynamicStructure();
+                        foreach (var row in rows)
+                        {
+                            obj.Dictionary[row.ToLower()] = reader[row];
+                        }
+                        yield return obj;
+                    }
+                }
+            }
+        }
+        public bool CallFunction(string functionName, params MySqlParameter[] parameters)
+        {
             if (MySqlConnection.State != ConnectionState.Open)
             {
                 Connect();
@@ -410,7 +472,7 @@ namespace AuthDaemon.Data
                 command.CommandType = CommandType.StoredProcedure;
 
                 command.Parameters.AddRange(parameters);
-                command.ExecuteNonQuery();
+                return command.ExecuteNonQuery() != 0;
             }
         }
         public void Connect()

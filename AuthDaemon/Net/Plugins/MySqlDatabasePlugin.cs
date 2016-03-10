@@ -34,12 +34,23 @@ namespace AuthDaemon.Net.Plugins
         {
             if (Enabled)
             {
+                var config = Session.Config;
+
                 var sql = new MySqlConnectionStringBuilder();
-                foreach(var pair in Session.Config[ConfigBlock])
+                foreach(var pair in config[ConfigBlock])
                 {
                     sql[pair.KeyName] = pair.Value;
                 }
-                Session.Database = new MySqlDatabase(sql.ConnectionString);
+                var queries = MySqlQuery.Load(config["SqlQueries"]["queries"]);
+                var mysqlDatabase = new MySqlDatabase(sql.ConnectionString);
+
+
+                foreach(var query in queries)
+                {
+                    mysqlDatabase.Queries[query.Name] = query;
+                }
+
+                Session.Database = mysqlDatabase;
             }
         }
     }

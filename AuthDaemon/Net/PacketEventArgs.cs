@@ -14,6 +14,8 @@ namespace AuthDaemon.Net
     {
         public uint PacketId { get; set; }
         public dynamic Packet { get; set; }
+        public bool Handled { get; set; }
+        public bool Cancel { get; set; }
 
         public PacketEventArgs(uint packetId, dynamic gamePacket)
         {

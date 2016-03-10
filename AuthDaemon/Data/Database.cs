@@ -13,19 +13,19 @@ namespace AuthDaemon.Data
 {
     public abstract class Database
     {
-        public virtual void AcquireUserPassword(string name, out int uid, out string password)
+        public virtual bool AcquireUserPassword(string name, out int uid, out string password)
         {
             throw new NotImplementedException();
         }
-        public virtual void AddForbid(int userId, int type, int forbidTime, byte[] reason, int gmRoleId)
+        public virtual bool AddForbid(int userId, int type, int forbidTime, byte[] reason, int gmRoleId)
         {
             throw new NotImplementedException();
         }
-        public virtual void AddGM(int userId, int zoneId)
+        public virtual bool AddGM(int userId, int zoneId)
         {
             throw new NotImplementedException();
         }
-        public virtual void AddUser(
+        public virtual bool AddUser(
             string name, 
             byte[] password, 
             string prompt, 
@@ -46,55 +46,55 @@ namespace AuthDaemon.Data
         {
             throw new NotImplementedException();
         }
-        public virtual void AddUserPoint(int uid, int aid, int time)
+        public virtual bool AddUserPoint(int uid, int aid, int time)
         {
             throw new NotImplementedException();
         }
-        public virtual void AddUserPrivilege(int userId, int zoneId, int rid)
+        public virtual bool AddUserPrivilege(int userId, int zoneId, int rid)
         {
             throw new NotImplementedException();
         }
-        public virtual void ChangePassword(string name, byte[] password)
+        public virtual bool ChangePassword(string name, byte[] password)
         {
             throw new NotImplementedException();
         }
-        public virtual void ChangePassword2(string name, byte[] password2)
+        public virtual bool ChangePassword2(string name, byte[] password2)
         {
             throw new NotImplementedException();
         }
-        public virtual void ClearOnlineRecords(int zoneId, int aid)
+        public virtual bool ClearOnlineRecords(int zoneId, int aid)
         {
             throw new NotImplementedException();
         }
-        public virtual void DeleteTimeoutForbid(int userId)
+        public virtual bool DeleteTimeoutForbid(int userId)
         {
             throw new NotImplementedException();
         }
-        public virtual void DeleteUserPrivilege(int userId, int zoneId, int rid, int deleteType)
+        public virtual bool DeleteUserPrivilege(int userId, int zoneId, int rid, int deleteType)
         {
             throw new NotImplementedException();
         }
-        public virtual void EnableIpLimit(int uid, bool status)
+        public virtual bool EnableIpLimit(int uid, bool status)
         {
             throw new NotImplementedException();
         }
-        public virtual void LockUser(int uid, bool lockStatus)
+        public virtual bool LockUser(int uid, bool lockStatus)
         {
             throw new NotImplementedException();
         }
-        public virtual void RecordOffline(int uid, int aid, ref int zoneId, ref int zoneLocalId, ref int overwrite)
+        public virtual bool RecordOffline(int uid, int aid, ref int zoneId, ref int zoneLocalId, ref int overwrite)
         {
             throw new NotImplementedException();
         }
-        public virtual void RecordOnline(int uid, int aid, ref int zoneId, ref int zoneLocalId, ref int overwrite)
+        public virtual bool RecordOnline(int uid, int aid, ref int zoneId, ref int zoneLocalId, ref int overwrite)
         {
             throw new NotImplementedException();
         }
-        public virtual void RemainTime(int uid, int aid, out int remain, out int freeTimeLeft)
+        public virtual bool RemainTime(int uid, int aid, out int remain, out int freeTimeLeft)
         {
             throw new NotImplementedException();
         }
-        public virtual void SetIpLimit(
+        public virtual bool SetIpLimit(
             int uid, 
             int ipaddr1, string ipmask1, 
             int ipaddr2, string ipmask2, 
@@ -103,7 +103,7 @@ namespace AuthDaemon.Data
         {
             throw new NotImplementedException();
         }
-        public virtual void UpdateUserInfo(
+        public virtual bool UpdateUserInfo(
             string name,
             string prompt,
             string answer,
@@ -122,7 +122,7 @@ namespace AuthDaemon.Data
         {
             throw new NotImplementedException();
         }
-        public virtual void UseCash(
+        public virtual bool UseCash(
             int userId, 
             int zoneId, 
             int sn, 
@@ -131,6 +131,10 @@ namespace AuthDaemon.Data
             int cash,
             int status,
             out int error)
+        {
+            throw new NotImplementedException();
+        }
+        public virtual IEnumerable<dynamic> Query(string name, params object[] args)
         {
             throw new NotImplementedException();
         }

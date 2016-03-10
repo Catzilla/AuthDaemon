@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Data\Database.cs" />
     <Compile Include="Data\MySqlDatabase.cs" />
+    <Compile Include="Data\MySqlQuery.cs" />
     <Compile Include="Ext.cs" />
     <Compile Include="IO\BigEndianConverter.cs" />
     <Compile Include="IO\DataStream.cs" />
@@ -81,7 +82,7 @@
     <Compile Include="IO\LittleEndianBitConverter.cs" />
     <Compile Include="IO\MarshallerException.cs" />
     <Compile Include="IO\Serialization\DynamicSerializer.cs" />
-    <Compile Include="IO\Serialization\DynamicStructure.cs" />
+    <Compile Include="DynamicStructure.cs" />
     <Compile Include="IO\Serialization\FieldBase.cs" />
     <Compile Include="IO\Serialization\PrimitiveField.cs" />
     <Compile Include="IO\Serialization\StructureDeclaration.cs" />
@@ -94,10 +95,14 @@
     <Compile Include="Net\PacketsRegistry.cs" />
     <Compile Include="Net\Plugin.cs" />
     <Compile Include="Net\PluginManager.cs" />
+    <Compile Include="Net\Plugins\AuthLockPlugin.cs" />
     <Compile Include="Net\Plugins\AnnounceZone.cs" />
     <Compile Include="Net\Plugins\AuthPlugin.cs" />
+    <Compile Include="Net\Plugins\OnlineRecordPlugin.cs" />
+    <Compile Include="Net\Plugins\PrivilegePlugin.cs" />
     <Compile Include="Net\Plugins\Rc4EncryptionPlugin.cs" />
     <Compile Include="Net\Plugins\MySqlDatabasePlugin.cs" />
+    <Compile Include="Net\PacketHandlerContainer.cs" />
     <Compile Include="Net\Security\Base\Rc4Security.cs" />
     <Compile Include="Net\Security\Encryptor.cs" />
     <Compile Include="Net\Security\MD5Hash.cs" />
@@ -108,6 +113,9 @@
     <Compile Include="ProtocolParser.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="queries.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="protocol.conf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

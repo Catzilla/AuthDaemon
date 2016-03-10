@@ -21,14 +21,14 @@ namespace AuthDaemon.Net.Plugins
             }
         }
 
-        public uint ZoneId;
-        public uint Aid;
-        public uint BlReset;
+        public int ZoneId;
+        public int Aid;
+        public int BlReset;
         public byte[] Ip1;
         public byte[] Ip2;
         public byte[] Ip3;
-        public uint GetAuVersion;
-        public uint Reserved;
+        public int GetAuVersion;
+        public int Reserved;
 
         public override void Initialize()
         {
@@ -47,6 +47,8 @@ namespace AuthDaemon.Net.Plugins
             Ip3 = e.Packet.Ip3;
             GetAuVersion = e.Packet.Reserved1;
             Reserved = e.Packet.Reserved2;
+
+            Session.Database.ClearOnlineRecords(ZoneId, Aid);
 
             if (Enabled)
             {
