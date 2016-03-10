@@ -1,4 +1,9 @@
-﻿namespace AuthDaemon.IO
+// ======================================================================
+// Author: freepvps
+// Github: https://github.com/FreePVPs/AuthDaemon/tree/master/AuthDaemon
+// ======================================================================
+
+namespace AuthDaemon.IO
 {
     public enum Endianness
     {

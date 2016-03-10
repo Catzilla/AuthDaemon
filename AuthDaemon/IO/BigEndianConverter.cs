@@ -1,4 +1,9 @@
-﻿namespace AuthDaemon.IO
+// ======================================================================
+// Author: freepvps
+// Github: https://github.com/FreePVPs/AuthDaemon/tree/master/AuthDaemon
+// ======================================================================
+
+namespace AuthDaemon.IO
 {
     /// <summary>
     /// Implementation of EndianBitConverter which converts to/from big-endian byte arrays.

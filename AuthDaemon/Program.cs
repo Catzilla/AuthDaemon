@@ -1,4 +1,8 @@
-﻿using System;
+// ======================================================================
+// Author: freepvps
+// Github: https://github.com/FreePVPs/AuthDaemon/tree/master/AuthDaemon
+// ======================================================================
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +28,7 @@ namespace AuthDaemon
         public static Logger Log = LogManager.GetLogger("main");
         public static IniData Config;
         public static AuthServer<AuthSession> AuthServer;
-
+        
         static void Main(string[] args)
         {
             if (args.Length == 0)

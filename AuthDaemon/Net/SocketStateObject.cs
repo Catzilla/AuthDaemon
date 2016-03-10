@@ -1,4 +1,9 @@
-﻿using System;
+// ======================================================================
+// Author: freepvps
+// Github: https://github.com/FreePVPs/AuthDaemon/tree/master/AuthDaemon
+// ======================================================================
+
+using System;
 using System.Net.Sockets;
 using AuthDaemon.Net.Security;
 using AuthDaemon.IO;
