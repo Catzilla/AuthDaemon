@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{572AE701-361A-4B9D-928F-29D2D3DC89D3}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AuthDaemon</RootNamespace>
+    <AssemblyName>AuthDaemon</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="INIFileParser, Version=2.2.4.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
+      <HintPath>..\packages\ini-parser.2.2.4\lib\net20\INIFileParser.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.2.3\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\Database.cs" />
+    <Compile Include="Data\MySqlDatabase.cs" />
+    <Compile Include="Ext.cs" />
+    <Compile Include="IO\BigEndianConverter.cs" />
+    <Compile Include="IO\DataStream.cs" />
+    <Compile Include="IO\EndianBitConverter.cs" />
+    <Compile Include="IO\Endianness.cs" />
+    <Compile Include="IO\LittleEndianBitConverter.cs" />
+    <Compile Include="IO\MarshallerException.cs" />
+    <Compile Include="IO\Serialization\DynamicSerializer.cs" />
+    <Compile Include="IO\Serialization\DynamicStructure.cs" />
+    <Compile Include="IO\Serialization\FieldBase.cs" />
+    <Compile Include="IO\Serialization\PrimitiveField.cs" />
+    <Compile Include="IO\Serialization\StructureDeclaration.cs" />
+    <Compile Include="Net\GameServer.cs" />
+    <Compile Include="Net\AuthServer.cs" />
+    <Compile Include="Net\AuthSession.cs" />
+    <Compile Include="Net\PacketEventArgs.cs" />
+    <Compile Include="Net\PacketEventHandler.cs" />
+    <Compile Include="Net\PacketsHandler.cs" />
+    <Compile Include="Net\PacketsRegistry.cs" />
+    <Compile Include="Net\Plugin.cs" />
+    <Compile Include="Net\PluginManager.cs" />
+    <Compile Include="Net\Plugins\AnnounceZone.cs" />
+    <Compile Include="Net\Plugins\AuthPlugin.cs" />
+    <Compile Include="Net\Plugins\Rc4EncryptionPlugin.cs" />
+    <Compile Include="Net\Plugins\MySqlDatabasePlugin.cs" />
+    <Compile Include="Net\Security\Base\Rc4Security.cs" />
+    <Compile Include="Net\Security\Encryptor.cs" />
+    <Compile Include="Net\Security\MD5Hash.cs" />
+    <Compile Include="Net\Security\Rc4Encryption.cs" />
+    <Compile Include="Net\SocketStateObject.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtocolParser.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sometext.txt" />
+    <None Include="protocol.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="App.config" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="auth.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
